@@ -22,6 +22,8 @@ from math import ceil
 from utils.utils import batch_PSNR
 from utils.SSIM import SSIM
 from utils import utils_image
+from datetime import timedelta
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--data_path", type=str, default="data/train/", help='txt path to training data')
 parser.add_argument('--workers', type=int, help='number of data loading workers', default=4)
@@ -80,9 +82,15 @@ def train_model(net, optimizer, lr_scheduler, datasets):
     num_iter_epoch = {phase: ceil(num_data[phase] / batch_size[phase]) for phase in _modes}
     writer = SummaryWriter(opt.log_dir)
     step = 0
+
+    # add start_time initialization
+    start_time = time.time()
+
     for epoch in range(opt.resume, opt.niter):
+        epoch_start = time.time()
+
         mse_per_epoch = {x: 0 for x in _modes}
-        tic = time.time()
+        #tic = time.time()
         # train stage
         lr = optimizer.param_groups[0]['lr']
         phase = 'train'
@@ -181,7 +189,16 @@ def train_model(net, optimizer, lr_scheduler, datasets):
         writer.add_scalar('val PSNR epoch', psnr_per_epoch, epoch + 1)
         writer.add_scalar('val SSIM epoch', ssim_per_epoch, epoch + 1)
         toc = time.time()
-        print('This epoch take time {:.2f}'.format(toc - tic))
+        epoch_time = toc - epoch_start
+        elapsed_time = toc - start_time
+        remaining_epochs = opt.niter - (epoch + 1)
+        estimated_total_time = elapsed_time + (epoch_time * remaining_epochs)
+        print(f"This epoch took {epoch_time:.2f} seconds.")
+        print(f"Elapsed time: {str(timedelta(seconds=elapsed_time))}")
+        print(f"Estimated remaining time: {str(timedelta(seconds=(epoch_time * remaining_epochs)))}")
+        print(f"Estimated total time: {str(timedelta(seconds=estimated_total_time))}")
+
+        #print('This epoch take time {:.2f}'.format(toc - tic))
     writer.close()
     print('Reach the maximal epochs! Finish training')
 
