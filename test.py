@@ -117,11 +117,11 @@ def main():
     model.eval()
     time_test = 0
     count = 0
-    #for imag_idx in range(200): # for original testing, 200 clean CT images
-    for imag_idx in range(1):  # for demo testing, we only provide one testing data as "test_640geo/000376_02_01/040/0.h5" due to the limitation of file size about supplementary material
+    for imag_idx in range(200): # for original testing, 200 clean CT images
+    #for imag_idx in range(1):  # for demo testing, we only provide one testing data as "test_640geo/000376_02_01/040/0.h5" due to the limitation of file size about supplementary material
         print("imag_idx:",imag_idx)
-      #  for mask_idx in range(10): # for original testing, 10 testing metal masks
-        for mask_idx in range(1):   # for demo testing, we only 1 testing metal masks
+        for mask_idx in range(test_mask.shape[2]): # for original testing, 10 testing metal masks
+      #  for mask_idx in range(1):   # for demo testing, we only 1 testing metal masks
             Xma, X, XLI, M = test_image(opt.data_path, imag_idx, mask_idx)
             with torch.no_grad():
                 if opt.use_GPU:
