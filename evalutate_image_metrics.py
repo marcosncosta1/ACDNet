@@ -30,32 +30,32 @@ def dynamic_win_size(image, default=7):
         win -= 1
     return win
 
-def evaluate_dicdnet_image_and_hu(
+def evaluate_acdnet_image_and_hu(
     results_dir="./save_results",
-    output_file="dicdnet_image_quality_metrics.txt"
+    output_file="acdnet_image_quality_metrics.txt"
 ):
     """
-    Evaluate PSNR and SSIM for normal images and HU images produced by DICDNet,
+    Evaluate PSNR and SSIM for normal images and HU images produced by ACDNet,
     using the naming convention:
       - GT normal:  n_gt_image.png
-      - Net normal: n_dicdnet_image.png
+      - Net normal: n_acdnet_image.png
       - GT HU:      n_gt_hu.png
-      - Net HU:     n_dicdnet_hu.png
+      - Net HU:     n_acdnet_hu.png
 
     Directory structure is assumed to be:
       results_dir/
        ├─ gt/
        │   ├─ image/   (files like n_gt_image.png)
        │   └─ hu/      (files like n_gt_hu.png)
-       └─ DICDNet/
-           ├─ image/   (files like n_dicdnet_image.png)
-           └─ hu/      (files like n_dicdnet_hu.png)
+       └─ ACDNet/
+           ├─ image/   (files like n_acdnet_image.png)
+           └─ hu/      (files like n_acdnet_hu.png)
     """
     # Define subfolder paths
     gt_image_dir = os.path.join(results_dir, "gt", "image")
-    net_image_dir = os.path.join(results_dir, "DICDNet", "image")
+    net_image_dir = os.path.join(results_dir, "ACDNet", "image")
     gt_hu_dir = os.path.join(results_dir, "gt", "hu")
-    net_hu_dir = os.path.join(results_dir, "DICDNet", "hu")
+    net_hu_dir = os.path.join(results_dir, "ACDNet", "hu")
 
     # Check that these directories exist
     for d in [gt_image_dir, net_image_dir, gt_hu_dir, net_hu_dir]:
@@ -79,9 +79,9 @@ def evaluate_dicdnet_image_and_hu(
     for gt_filename in all_gt_filenames:
         # Extract prefix (e.g., "1000" from "1000_gt_image.png")
         prefix = gt_filename.replace("_gt_image.png", "")
-        net_img_filename = f"{prefix}_dicdnet_image.png"
+        net_img_filename = f"{prefix}_acdnet_image.png"
         gt_hu_filename = f"{prefix}_gt_hu.png"
-        net_hu_filename = f"{prefix}_dicdnet_hu.png"
+        net_hu_filename = f"{prefix}_acdnet_hu.png"
 
         gt_img_path = os.path.join(gt_image_dir, gt_filename)
         net_img_path = os.path.join(net_image_dir, net_img_filename)
@@ -175,7 +175,7 @@ def evaluate_dicdnet_image_and_hu(
 
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     full_report = (
-        f"DICDNet Image Quality Evaluation\n"
+        f"ACDNet Image Quality Evaluation\n"
         f"Date: {timestamp}\n"
         f"Results Directory: {results_dir}\n\n"
         + table_header + "\n" +
@@ -190,9 +190,9 @@ def evaluate_dicdnet_image_and_hu(
     print(f"\nReport saved to: {os.path.abspath(output_file)}")
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Evaluate DICDNet image quality metrics")
-    parser.add_argument("--results_dir", type=str, default="./save_results", help="Directory containing DICDNet results")
-    parser.add_argument("--output_file", type=str, default="dicdnet_image_quality_metrics.txt", help="Output filename for the report")
+    parser = argparse.ArgumentParser(description="Evaluate ACDNet image quality metrics")
+    parser.add_argument("--results_dir", type=str, default="./save_results", help="Directory containing ACDNet results")
+    parser.add_argument("--output_file", type=str, default="acdnet_image_quality_metrics.txt", help="Output filename for the report")
     args = parser.parse_args()
 
-    evaluate_dicdnet_image_and_hu(args.results_dir, args.output_file)
+    evaluate_acdnet_image_and_hu(args.results_dir, args.output_file)
