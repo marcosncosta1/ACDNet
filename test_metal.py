@@ -12,14 +12,13 @@ from acdnet import ACDNet  # Ensure your ACDNet is defined in acdnet.py
 # Argument Parser
 ###############################################################################
 parser = argparse.ArgumentParser(description="ACDNet Test on NIfTI Data - Process Only Metal Slices")
+# Essential paths
 parser.add_argument("--model_dir", type=str, default="models/ACDNet_latest.pt", help="Path to model weights")
 parser.add_argument("--data_path", type=str, default="data/test/CTPelvic1K_METAL", help="Folder with .nii.gz volumes")
 parser.add_argument("--save_path", type=str, default="save_results_nii/", help="Folder to save outputs")
-parser.add_argument("--use_gpu", type=bool, default=True, help="Use GPU or not")
-parser.add_argument("--gpu_id", type=str, default="0", help="GPU id")
 
-# Match exactly with training parameters
-parser.add_argument("--batchSize", type=int, default=32, help="Testing input batch size")
+# Model configuration - match exactly with training parameters
+parser.add_argument("--batchSize", type=int, default=32, help="Testing batch size")
 parser.add_argument("--patchSize", type=int, default=64, help="Height/width of input image to network")
 parser.add_argument("--N", type=int, default=6, help="Number of feature maps")
 parser.add_argument("--Np", type=int, default=32, help="Number of channel concatenations")
@@ -30,8 +29,12 @@ parser.add_argument("--Mtau", type=float, default=0.5, help="Sparse feature map 
 parser.add_argument("--etaM", type=float, default=1.0, help="Stepsize for updating M")
 parser.add_argument("--etaX", type=float, default=5.0, help="Stepsize for updating X")
 
-# Add missing parameters from train.py
+# Hardware settings
+parser.add_argument("--use_gpu", type=bool, default=True, help="Use GPU or not")
+parser.add_argument("--gpu_id", type=str, default="0", help="GPU id")
 parser.add_argument("--workers", type=int, default=4, help="Number of data loading workers")
+
+# Additional parameters needed for model initialization
 parser.add_argument("--niter", type=int, default=300, help="Total number of training epochs")
 parser.add_argument("--milestone", type=int, default=[50,100,150,200], nargs='+', help="When to decay learning rate")
 parser.add_argument("--lr", type=float, default=0.0002, help="Initial learning rate")
@@ -39,8 +42,9 @@ parser.add_argument("--Xl2", type=float, default=1, help="Loss weights")
 parser.add_argument("--Xl1", type=float, default=5e-4, help="Loss weights")
 parser.add_argument("--Al1", type=float, default=5e-4, help="Loss weights")
 
-# Metal threshold in Hounsfield Units (adjust as needed)
+# Metal threshold in Hounsfield Units
 parser.add_argument("--metal_threshold", type=float, default=2500.0, help="HU threshold for metal detection")
+
 opt = parser.parse_args()
 
 if opt.use_gpu:
