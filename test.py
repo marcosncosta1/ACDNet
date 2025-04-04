@@ -26,7 +26,7 @@ parser.add_argument('--Mtau', type=float, default=1.5, help='for sparse feature 
 parser.add_argument('--etaM', type=float, default=1, help='stepsize for updating M')
 parser.add_argument('--etaX', type=float, default=5, help='stepsize for updating X')
 parser.add_argument('--batchSize', type=int, default=1, help='testing input batch size')
-opt = parser.parse_args()
+opt = parser.parse_args() 
 
 if opt.use_GPU:
     os.environ["CUDA_VISIBLE_DEVICES"] = opt.gpu_id
